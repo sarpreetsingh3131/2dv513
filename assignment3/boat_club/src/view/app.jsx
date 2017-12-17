@@ -61,6 +61,7 @@ class App extends React.Component {
     let arr = this.state.tBody
     arr.splice(index, 1)
     this.setState({ tBody: arr, message: message })
+    window.setTimeout(() => this.setState({ message: '' }), 1000)
   }
 
   render () {

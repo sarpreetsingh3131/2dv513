@@ -52,6 +52,7 @@ export class API {
         .catch(err => reject(err))
     })
   }
+
   delete (endPoint, id) {
     return new Promise((resolve, reject) => {
       window.fetch(this.BASE_URL + endPoint + '/' + id, { method: 'DELETE' })
