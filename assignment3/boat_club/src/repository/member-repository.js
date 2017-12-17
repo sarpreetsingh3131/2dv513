@@ -17,7 +17,7 @@ export class MemberRepository {
               err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getMember(res.insertId))
             })
         })
-      .catch(err => reject(err))
+      .catch(err => reject(new MyError(err.message, 400)))
     })
   }
 
@@ -51,7 +51,6 @@ export class MemberRepository {
   deleteMember (memberId) {
     return new Promise((resolve, reject) => {
       this.connection.query(DELETE_MEMBER, [memberId], (err, res) => {
-        console.log(res)
         err || res.affectedRows === 0 ? reject(new MyError('not found', 404)) : resolve(res)
       })
     })

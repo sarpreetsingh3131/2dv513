@@ -17,7 +17,7 @@ export class BoatRepository {
               err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getBoat(res.insertId))
             })
         })
-        .catch(err => reject(err))
+        .catch(err => reject(new MyError(err.message, 400)))
     })
   }
 

@@ -14,6 +14,15 @@ new DB().connect()
       let port = 3000
 
       app.use(bodyParser.json())
+
+      app.use((req, res, next) => {
+        res.type('json')
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000')
+        res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE')
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+        next()
+      })
+
       app.use(BASE_URL, new MemberController(connection), new BoatController(connection),
         new BoatTypeController(connection), new GenderController(connection))
 
