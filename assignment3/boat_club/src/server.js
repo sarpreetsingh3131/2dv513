@@ -5,6 +5,8 @@ import { DB } from './db/db'
 import { BASE_URL } from './api/api'
 import { MemberController } from './controller/member-controller'
 import { BoatController } from './controller/boat-controller'
+import { BoatTypeController } from './controller/boat-type-controller'
+import { GenderController } from './controller/gender-controller'
 
 new DB().connect()
     .then(connection => {
@@ -12,7 +14,9 @@ new DB().connect()
       let port = 3000
 
       app.use(bodyParser.json())
-      app.use(BASE_URL, new MemberController(connection), new BoatController(connection))
+      app.use(BASE_URL, new MemberController(connection), new BoatController(connection),
+        new BoatTypeController(connection), new GenderController(connection))
+
       app.use((request, response, next) => response.status(404).send({ error: 'not found' }))
 
       app.use((err, request, response, next) => {

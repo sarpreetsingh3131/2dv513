@@ -5,8 +5,6 @@
 
 # API "RESTful"
 
-## CRUD member
-
 **Create a member**
 ----
 * **URL** `/api/members`
@@ -22,17 +20,68 @@
 
 * **Success Response:**
     * **Code:** 201 <br />
-        **Content:** 
-                
+        **Content:**
+
            {
             "member": {
                 "id": 5,
                 "name": "sarpreet singh",
                 "age": 23,
-                "gender": 1
+                "gender": "male"
             }
 
 ---
+**Create a boat**
+----
+* **URL** `/api/boats`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Body:**
+
+        {
+	        "year": "1980",
+	        "length": 2.8,
+	        "memberId": "1",
+            "type": "kayak"
+        }
+
+* **Success Response:**
+    * **Code:** 201 <br />
+        **Content:** 
+                
+            {
+                "boat": {
+                    "id": 1,
+                    "year": 1980,
+                    "length": 2.8,
+                    "owner": "sarpreet singh"
+                    "type": "kayak"
+                }
+            }
+            
+---
+**Create a boat type**
+----
+* **URL** `/api/boatTypes`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Body:**
+
+        {
+            "type": "kayak"
+        }
+
+* **Success Response:**
+    * **Code:** 201 <br />
+        **Content:** 
+                
+            {
+                "boatType": {
+                    "type": "kayak"
+                }
+            }
+            
+-----            
 **Update a member**
 ----
 * **URL** `/api/members`
@@ -56,13 +105,55 @@
                 "id": 5,
                 "name": "sarpreet singh buttar",
                 "age": 23,
-                "gender": 1
+                "gender": "male"
+            }
+
+---
+**Update a boat**
+----
+* **URL** `/api/boats`
+* **Method:** `PUT`
+* **Headers:** `Content-Type: application/json`
+* **Body:**
+
+        {
+            "id": 1,
+            "year": 1980,
+            "length": 12.8,
+            "type": "kayak"
+        }
+
+* **Success Response:**
+    * **Code:** 200 <br />
+        **Content:** 
+                
+           {
+                "boat": {
+                    "id": 1,
+                    "year": 1980,
+                    "length": 12.8,
+                    "owner": "sarpreet singh"
+                    "type": "kayak"
+                }
             }
 
 ---
 **Delete a member**
 ----
 * **URL** `/api/members/:memberId`
+* **Method:** `DELETE`
+* **Success Response:**
+    * **Code:** 200 <br />
+        **Content:** 
+                
+            { 
+                "message": "deleted successfully"
+            }
+
+---
+**Delete a boat**
+----
+* **URL** `/api/boats/:boatId`
 * **Method:** `DELETE`
 * **Success Response:**
     * **Code:** 200 <br />
@@ -88,7 +179,7 @@
                         "id": 1,
                         "name": "singh",
                         "age": 23,
-                        "gender": 1
+                        "gender": "male"
                     }
                     ....
                 ]
@@ -108,80 +199,7 @@
                 "id": 5,
                 "name": "sarpreet singh buttar",
                 "age": 23,
-                "gender": 1
-            }
-
--------------------
--------------------
-## CRUD boat
-
-**Create a boat**
-----
-* **URL** `/api/boats`
-* **Method:** `POST`
-* **Headers:** `Content-Type: application/json`
-* **Body:**
-
-        {
-	        "year": "1980",
-	        "length": 2.8,
-	        "memberId": "1",
-            "type": "kayak"
-        }
-
-* **Success Response:**
-    * **Code:** 201 <br />
-        **Content:** 
-                
-            {
-                "boat": {
-                    "id": 1,
-                    "year": 1980,
-                    "length": 2.8,
-                    "member_id": 1,
-                    "type_id": 1
-                }
-            }
-
----
-**Update a boat**
-----
-* **URL** `/api/members`
-* **Method:** `PUT`
-* **Headers:** `Content-Type: application/json`
-* **Body:**
-
-        {
-            "id": 1,
-            "year": 1980,
-            "length": 12.8,
-            "memberId": 1,
-            "type": "kayak"
-        }
-
-* **Success Response:**
-    * **Code:** 200 <br />
-        **Content:** 
-                
-           {
-                "id": 1,
-                "year": 1980,
-                "length": 12.8,
-                "memberId": 1,
-                "typeId": 1
-            }
-
----
-**Delete a boat**
-----
-* **URL** `/api/boats/:boatId`
-* **Method:** `DELETE`
-* **Success Response:**
-    * **Code:** 200 <br />
-        **Content:** 
-                
-            { 
-                "message": "deleted successfully"
+                "gender": "male"
             }
 
 ---
@@ -200,8 +218,8 @@
                         "id": 1,
                         "year": 1980,
                         "length": 2.8,
-                        "member_id": 1,
-                        "type_id": 1
+                        "owner": "sarpreet singh",
+                        "type": "kayak"
                     }
                     ...
                 ]
@@ -222,7 +240,45 @@
                     "id": 1,
                     "year": 1980,
                     "length": 2.8,
-                    "member_id": 1,
-                    "type_id": 1
+                    "owner": "sarpreet singh",
+                    "type": "kayak"
                 }
+            }
+
+----
+**Get genders**
+----
+* **URL** `/api/genders`
+* **Method:** `GET`
+
+* **Success Response:**
+    * **Code:** 200 <br />
+        **Content:** 
+            
+            {
+                "genders": [
+                    {
+                        "type": "female"
+                    }
+                    ...
+                ]
+            }
+
+---
+**Get boat types**
+----
+* **URL** `/api/boatTypes`
+* **Method:** `GET`
+
+* **Success Response:**
+    * **Code:** 200 <br />
+        **Content:** 
+            
+            {
+                "boatTypes": [
+                    {
+                        "type": "kayak"
+                    }
+                    ...
+                ]
             }
