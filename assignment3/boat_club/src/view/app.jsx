@@ -38,6 +38,7 @@ class App extends React.Component {
   }
 
   handleResult (res) {
+    console.log(res)
     this.setState({
       tBody: res.tBody || this.state.tBody,
       tHead: res.tHead || this.state.tHead,
@@ -65,6 +66,9 @@ class App extends React.Component {
         break
       case 'boatType':
         arr[event.target.id].type = event.target.value
+        break
+      case 'year':
+        arr[event.target.id].year = event.target.value
     }
     this.setState({ tBody: arr })
   }
