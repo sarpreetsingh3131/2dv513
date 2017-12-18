@@ -25,3 +25,5 @@ export let DELETE_BOAT = '/boats/:boatId'
 export let GET_BOAT_TYPES = '/boatTypes'
 
 export let CREATE_BOAT_TYPE = '/boatTypes'
+
+export let UPDATE_BOAT_TYPE = '/boatTypes'

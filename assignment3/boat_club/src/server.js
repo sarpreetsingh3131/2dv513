@@ -26,7 +26,7 @@ new DB().connect()
       app.use(BASE_URL, new MemberController(connection), new BoatController(connection),
         new BoatTypeController(connection), new GenderController(connection))
 
-      app.use((request, response, next) => response.status(404).send({ error: 'not found' }))
+      app.use((request, response, next) => response.status(404).send({ error: 'url not found' }))
 
       app.use((err, request, response, next) => {
         console.log('ERROR', err.stack)

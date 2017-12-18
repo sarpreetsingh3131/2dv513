@@ -15,8 +15,8 @@ export class BoatController extends express.Router {
     })
 
     this.route(GET_BOATS).get((req, res) => {
-      this.service.getBoats()
-        .then(boat => res.status(200).send({ boats: boat }))
+      this.service.getBoats(req.query.memberId)
+        .then(boats => res.status(200).send({ boats: boats }))
         .catch(err => res.status(err.status || 500).send({ error: err.message }))
     })
 

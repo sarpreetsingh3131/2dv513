@@ -9,8 +9,8 @@ export class BoatService {
     return this.repo.createBoat(boat)
   }
 
-  getBoats () {
-    return this.repo.getBoats()
+  getBoats (memberId) {
+    return this.repo.getBoats(memberId)
   }
 
   getBoat (boatId) {

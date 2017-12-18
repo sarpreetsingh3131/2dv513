@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 
 import { Table } from './components/table.jsx'
 import { Sidebar } from './components/sidebar.jsx'
+import { API } from './api'
 
 class App extends React.Component {
   constructor () {
@@ -10,29 +11,40 @@ class App extends React.Component {
     this.state = {
       tBody: [],
       tHead: [],
-      isEditing: false,
+      genders: [],
+      boatTypes: [],
       endPoint: '',
       message: '',
       color: ''
     }
+    this.api = new API()
   }
 
-  handleTableResult (res) {
-    this.setState({ tBody: res.tBody, tHead: res.tHead, endPoint: res.endPoint, message: res.message, color: 'green' })
-    window.setTimeout(() => this.setState({ message: '' }), 1000)
+  render () {
+    return (
+      <div>
+        {this.state.message === '' ? null : <div className={'ui message ' + this.state.color}>{this.state.message}</div>}
+        <Sidebar fetch={this.fetch.bind(this)} api={this.api} />
+        <Table values={this.state} handleResult={this.handleResult.bind(this)} delete={this.delete.bind(this)}
+          handleEditing={this.handleEditing.bind(this)} api={this.api} fetch={this.fetch.bind(this)} />
+      </div>
+    )
   }
 
-  handleIsEditing (isEditing) {
-    this.setState({ isEditing: isEditing })
+  componentDidMount () {
+    Promise.all([this.api.fetch([], this.api.BOAT_TYPE_END_POINT), this.api.fetch([], this.api.GENDER_END_POINT)])
+      .then(res => this.setState({ boatTypes: res[0].tBody, genders: res[1].tBody }))
+      .catch(err => this.handleResult({ message: err.message, color: 'red' }))
   }
 
-  handleError (message) {
-    this.setState({ message: message, color: 'red' })
-    window.setTimeout(() => this.setState({ message: '' }), 2000)
-  }
-
-  handleMessage (messsage) {
-    this.setState({ message: messsage, color: 'green' })
+  handleResult (res) {
+    this.setState({
+      tBody: res.tBody || this.state.tBody,
+      tHead: res.tHead || this.state.tHead,
+      endPoint: res.endPoint || this.state.endPoint,
+      message: res.message,
+      color: res.color
+    })
     window.setTimeout(() => this.setState({ message: '' }), 1000)
   }
 
@@ -57,25 +69,16 @@ class App extends React.Component {
     this.setState({ tBody: arr })
   }
 
-  delete (index, message) {
+  delete (index, res) {
     let arr = this.state.tBody
     arr.splice(index, 1)
-    this.setState({ tBody: arr, message: message })
-    window.setTimeout(() => this.setState({ message: '' }), 1000)
+    this.handleResult({ tBody: arr, message: res.message, color: res.color })
   }
 
-  render () {
-    return (
-      <div>
-        {this.state.message === '' ? null : <div className={'ui message ' + this.state.color}>{this.state.message}</div>}
-        <Sidebar handleTableResult={this.handleTableResult.bind(this)} handleIsEditing={this.handleIsEditing.bind(this)}
-          handleError={this.handleError.bind(this)} />
-        <Table tBody={this.state.tBody} tHead={this.state.tHead} endPoint={this.state.endPoint}
-          handleTableResult={this.handleTableResult.bind(this)} handleEditing={this.handleEditing.bind(this)}
-          isEditing={this.state.isEditing} handleIsEditing={this.handleIsEditing.bind(this)}
-          delete={this.delete.bind(this)} handleError={this.handleError.bind(this)} handleMessage={this.handleMessage.bind(this)} />
-      </div>
-    )
+  fetch (headers, endPoint) {
+    this.api.fetch(headers, endPoint)
+        .then(result => this.handleResult(result))
+        .catch(err => this.handleResult({ message: err.message, color: 'red' }))
   }
 }
 

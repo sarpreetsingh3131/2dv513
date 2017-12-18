@@ -12,4 +12,8 @@ export class BoatTypeService {
   getBoatTypes () {
     return this.repo.getBoatTypes()
   }
+
+  updateBoatType (boatType) {
+    return this.repo.updateBoatType(boatType)
+  }
 }

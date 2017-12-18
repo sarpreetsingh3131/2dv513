@@ -32,7 +32,7 @@ export class MemberRepository {
   getMember (memberId) {
     return new Promise((resolve, reject) => {
       this.connection.query(GET_MEMBER, [memberId], (err, res) => {
-        err || !res[0] ? reject(new MyError('not found', 404)) : resolve(res[0])
+        err || !res[0] ? reject(new MyError('not found', 404)) : resolve(res)
       })
     })
   }
