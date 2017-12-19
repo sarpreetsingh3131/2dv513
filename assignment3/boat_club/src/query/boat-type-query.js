@@ -7,3 +7,5 @@ export const GET_BOAT_TYPE = GET_BOAT_TYPES + ' WHERE id = ?'
 export const CREATE_BOAT_TYPE = 'INSERT INTO boat_club.boat_type SET ?'
 
 export const UPDATE_BOAT_TYPE = 'UPDATE boat_club.boat_type SET type = ? WHERE id = ?'
+
+export const DELETE_BOAT_TYPE = 'DELETE FROM boat_club.boat_type WHERE id = ?'

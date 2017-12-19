@@ -1,6 +1,6 @@
 export const MEMBER_TABLE_HEADER = ['ID', 'Name', 'Age', 'Gender', 'Boats', 'Action']
-export const BOAT_TABLE_HEADER = ['Manufacture Year', 'Length (ft)', 'Type', 'Owner', 'Action']
-export const BOAT_TYPE_TABLE_HEADER = ['Type', 'Action']
+export const BOAT_TABLE_HEADER = ['ID', 'Manufacture Year', 'Length (ft)', 'Type', 'Owner', 'Action']
+export const BOAT_TYPE_TABLE_HEADER = ['ID', 'Type', 'Action']
 export const BASE_URL = 'http://localhost:3000/api/'
 export const MEMBER_END_POINT = 'members'
 export const BOAT_END_POINT = 'boats'

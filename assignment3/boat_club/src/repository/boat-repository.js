@@ -1,6 +1,6 @@
 import { MyError } from '../error/error'
 import {
-  CREATE_BOAT, GET_BOATS, GET_BOAT, UPDATE_BOAT, DELETE_BOAT, SEARCH_BOATS_BY_MEMBER, SEARCH_BOATS_BY_TYPE
+  CREATE_BOAT, GET_BOATS, GET_BOAT, UPDATE_BOAT, DELETE_BOAT, SEARCH_BOATS_BY_MEMBER, SEARCH_BOATS_BY_TYPE, SEARCH_BOATS_BY_LENGTH_EQUALS_TO, SEARCH_BOATS_BY_LENGTH_SMALLER_THAN, SEARCH_BOATS_BY_LENGTH_GREATER_THAN, SEARCH_BOATS_BY_MANF_YEAR_EQUALS_TO, SEARCH_BOATS_BY_MANF_YEAR_GREATER_THAN, SEARCH_BOATS_BY_MANF_YEAR_SMALLER_THAN
 } from '../query/boat-query'
 import { BoatTypeRepository } from './boat-type-repository'
 
@@ -25,6 +25,22 @@ export class BoatRepository {
             value: typeId
           }))
           .catch(err => reject(err))
+      }
+      if (query.length) {
+        resolve({
+          query: query.operator === 'equals' ? SEARCH_BOATS_BY_LENGTH_EQUALS_TO
+            : (query.operator === 'greater' ? SEARCH_BOATS_BY_LENGTH_GREATER_THAN
+              : SEARCH_BOATS_BY_LENGTH_SMALLER_THAN),
+          value: query.length
+        })
+      }
+      if (query.manfYear) {
+        resolve({
+          query: query.operator === 'equals' ? SEARCH_BOATS_BY_MANF_YEAR_EQUALS_TO
+            : (query.operator === 'greater' ? SEARCH_BOATS_BY_MANF_YEAR_GREATER_THAN
+              : SEARCH_BOATS_BY_MANF_YEAR_SMALLER_THAN),
+          value: query.manfYear
+        })
       }
     })
   }

@@ -3,7 +3,10 @@ import React from 'react'
 import {
   BOAT_END_POINT, BOAT_TABLE_HEADER, BOAT_TYPE_END_POINT, MEMBER_END_POINT, MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, SEARCH_BOAT_END_POINT
 } from '../api'
-import { MEMBER_NAME, MEMBER_AGE, MEMBER_GENDER, BOAT_YEAR, BOAT_LENGTH, BOAT_TYPE, BOAT_TYPE_TYPE } from '../app.jsx'
+import {
+  MEMBER_NAME, MEMBER_AGE, MEMBER_GENDER, BOAT_YEAR, BOAT_LENGTH, BOAT_TYPE, BOAT_TYPE_TYPE, BOAT_START_LENGTH,
+  BOAT_START_YEAR, MEMBER_START_AGE, OWNER
+} from '../app.jsx'
 
 export class Table extends React.Component {
   constructor (props) {
@@ -68,11 +71,16 @@ export class Table extends React.Component {
     return (
       <td>
         {this.state.editIndex === index
-          ? <select id={index} name={name} value={current || arr[0].type || arr[0]}
+          ? <select id={index} name={name} value={current || arr[0].type || arr[0].name || arr[0]}
             onChange={(e) => this.props.handleEditing(e)} className='ui dropdown'>
-            {arr.map((value, index) => <option key={index} id={value.type || value}>{value.type || value}</option>)}
+            {arr.map((value, index) =>
+              <option key={index} id={value.type || value.id || value}>
+                {value.name ? value.name + ' ID=' + value.id + '' : value.type || value}
+              </option>)}
           </select>
-          : current}
+          : name === MEMBER_GENDER
+            ? this.displayLink(MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, '?gender=' + current, current)
+            : current}
       </td>
     )
   }
@@ -83,21 +91,16 @@ export class Table extends React.Component {
         {this.state.editIndex === index
         ? <i className='circular save outline icon link' onClick={() => this.save(index)} />
         : <i className='circular edit outline icon link' onClick={() => this.edit(index)} />}
-        {value
-          ? <i className={'circular trash outline icon link'} onClick={() => this.delete(value.id, index)} />
-          : null}
+        <i className={'circular trash outline icon link'} onClick={() => this.delete(value.id, index)} />
       </td>
     )
   }
 
   displayLink (header, endPoint, query, value) {
-    return (
-      <td>
-        {this.state.isAdding
-          ? null
-          : <a href='#' onClick={() => this.props.fetch(header, endPoint, query)}>{value}</a>}
-      </td>
-    )
+    let element = this.state.isAdding ? null : <a href='#' onClick={() =>
+      this.props.fetch(header, endPoint, query)}>{value}</a>
+    if (query.includes('gender')) return element
+    return (<td>{element}</td>)
   }
 
   displayMemberTable () {
@@ -112,7 +115,7 @@ export class Table extends React.Component {
                   value={value.name} />
                 : value.name}
             </td>
-            {this.displayDropdown(value.age, [], index, MEMBER_AGE, 18, 100)}
+            {this.displayDropdown(value.age, [], index, MEMBER_AGE, MEMBER_START_AGE, 100)}
             {this.displayDropdown(value.gender, this.props.values.genders, index, MEMBER_GENDER)}
             {this.displayLink(BOAT_TABLE_HEADER, SEARCH_BOAT_END_POINT, '?memberId=' + value.id, 'See Boats')}
             {this.displayAction(index, value)}
@@ -127,11 +130,13 @@ export class Table extends React.Component {
       <tbody>
         {this.props.values.tBody.map((value, index) =>
           <tr key={index}>
-            {this.displayDropdown(value.year, [], index, BOAT_YEAR, 1960, 2017)}
+            <td>{value.id}</td>
+            {this.displayDropdown(value.year, [], index, BOAT_YEAR, BOAT_START_YEAR, 2017)}
             {this.displayDropdown(value.length, this.getBoatLength(), index, BOAT_LENGTH)}
             {this.displayDropdown(value.type, this.props.values.boatTypes, index, BOAT_TYPE)}
-            {this.displayLink(
-              MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, '?memberId=' + value.memberId, value.owner)}
+            {this.state.isAdding
+              ? this.displayDropdown(value.owner, this.props.values.owners, index, OWNER)
+              : this.displayLink(MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, '?memberId=' + value.memberId, value.owner)}
             {this.displayAction(index, value)}
           </tr>
         )}
@@ -144,6 +149,7 @@ export class Table extends React.Component {
       <tbody>
         {this.props.values.tBody.map((value, index) =>
           <tr key={index}>
+            <td>{value.id}</td>
             <td>
               {this.state.editIndex === index
                 ? <input id={index} name={BOAT_TYPE_TYPE} onChange={(e) => this.props.handleEditing(e)}
@@ -151,7 +157,7 @@ export class Table extends React.Component {
                 : <a href='#' onClick={() => this.props.fetch(BOAT_TABLE_HEADER,
                   SEARCH_BOAT_END_POINT, '?type=' + value.type)}>{value.type}</a>}
             </td>
-            {this.displayAction(index)}
+            {this.displayAction(index, value)}
           </tr>
         )}
       </tbody>
@@ -160,7 +166,7 @@ export class Table extends React.Component {
 
   getBoatLength () {
     let arr = []
-    for (let i = 20; i <= 50; i++) {
+    for (let i = BOAT_START_LENGTH; i <= 50; i++) {
       arr.push(i)
       for (let j = 1; j <= 12; j++) arr.push(i + '.' + j)
     }

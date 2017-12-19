@@ -1,4 +1,4 @@
-import { CREATE_MEMBER, GET_MEMBERS, UPDATE_MEMBER, DELETE_MEMBER, SEARCH_MEMBER_BY_ID } from '../query/member-query'
+import { CREATE_MEMBER, GET_MEMBERS, UPDATE_MEMBER, DELETE_MEMBER, SEARCH_MEMBERS_BY_ID, SEARCH_MEMBERS_BY_GENDER, SEARCH_MEMBERS_BY_AGE_EQUALS_TO, SEARCH_MEMBERS_BY_AGE_GREATER_THAN, SEARCH_MEMBERS_BY_AGE_SMALLER_THAN, SEARCH_MEMBERS_BY_NAME } from '../query/member-query'
 import { MyError } from '../error/error'
 import { GenderRepository } from './gender-repository'
 
@@ -20,8 +20,44 @@ export class MemberRepository {
     }
   }
 
+  getQueryAndValue (query) {
+    return new Promise((resolve, reject) => {
+      if (query.gender) {
+        this.genderRepo.getGenderId(query.gender)
+          .then(genderId => resolve({
+            query: SEARCH_MEMBERS_BY_GENDER,
+            value: genderId
+          }))
+          .catch(err => reject(err))
+      }
+      if (query.age) {
+        resolve({
+          query: query.operator === 'equals' ? SEARCH_MEMBERS_BY_AGE_EQUALS_TO
+            : (query.operator === 'greater' ? SEARCH_MEMBERS_BY_AGE_GREATER_THAN
+              : SEARCH_MEMBERS_BY_AGE_SMALLER_THAN),
+          value: query.age
+        })
+      }
+      if (query.name) {
+        resolve({
+          query: SEARCH_MEMBERS_BY_NAME,
+          value: '%' + query.name + '%'
+        })
+      }
+    })
+  }
+
   search (query) {
-    return this.getMember(query.memberId)
+    if (query.memberId) return this.getMember(query.memberId)
+    return new Promise((resolve, reject) => {
+      this.getQueryAndValue(query)
+        .then(res => {
+          this.connection.query(res.query, [res.value], (err, res) => {
+            err ? reject(new MyError('not found', 404)) : resolve(res)
+          })
+        })
+    .catch(err => reject(err))
+    })
   }
 
   createMember (member) {
@@ -52,7 +88,7 @@ export class MemberRepository {
 
   getMember (memberId) {
     return new Promise((resolve, reject) => {
-      this.connection.query(SEARCH_MEMBER_BY_ID, [memberId], (err, res) => {
+      this.connection.query(SEARCH_MEMBERS_BY_ID, [memberId], (err, res) => {
         err || !res[0] ? reject(new MyError('not found', 404)) : resolve(res)
       })
     })

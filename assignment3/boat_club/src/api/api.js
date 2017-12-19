@@ -26,4 +26,6 @@ export const CREATE_BOAT_TYPE = '/boatTypes'
 
 export const UPDATE_BOAT_TYPE = '/boatTypes'
 
+export const DELETE_BOAT_TYPE = '/boatTypes/:boatTypeId'
+
 export const SEARCH_BOATS = '/boats/search'

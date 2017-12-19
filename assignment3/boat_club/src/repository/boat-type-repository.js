@@ -1,4 +1,4 @@
-import { GET_BOAT_TYPES, GET_BOAT_TYPE_ID, CREATE_BOAT_TYPE, GET_BOAT_TYPE, UPDATE_BOAT_TYPE } from '../query/boat-type-query'
+import { GET_BOAT_TYPES, GET_BOAT_TYPE_ID, CREATE_BOAT_TYPE, GET_BOAT_TYPE, UPDATE_BOAT_TYPE, DELETE_BOAT_TYPE } from '../query/boat-type-query'
 import { MyError } from '../error/error'
 
 export class BoatTypeRepository {
@@ -10,6 +10,14 @@ export class BoatTypeRepository {
     return new Promise((resolve, reject) => {
       this.connection.query(CREATE_BOAT_TYPE, { type: boatType.type }, (err, res) => {
         err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getBoatType(res.insertId))
+      })
+    })
+  }
+
+  deleteBoatType (boatTypeId) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(DELETE_BOAT_TYPE, [boatTypeId], (err, res) => {
+        err || res.affectedRows === 0 ? reject(new MyError(err.sqlMessage || 'not found', 404)) : resolve(res)
       })
     })
   }

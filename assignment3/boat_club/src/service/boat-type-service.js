@@ -16,4 +16,8 @@ export class BoatTypeService {
   updateBoatType (boatType) {
     return this.repo.updateBoatType(boatType)
   }
+
+  deleteBoatType (boayTypeId) {
+    return this.repo.deleteBoatType(boayTypeId)
+  }
 }

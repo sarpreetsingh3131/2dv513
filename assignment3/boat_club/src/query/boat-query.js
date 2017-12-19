@@ -11,3 +11,15 @@ export const DELETE_BOAT = 'DELETE FROM boat_club.boat WHERE id = ?'
 export const SEARCH_BOATS_BY_MEMBER = GET_BOATS + ' WHERE member_id = ?'
 
 export const SEARCH_BOATS_BY_TYPE = GET_BOATS + ' WHERE type_id = ?'
+
+export const SEARCH_BOATS_BY_LENGTH_EQUALS_TO = GET_BOATS + ' WHERE length = ?'
+
+export const SEARCH_BOATS_BY_LENGTH_GREATER_THAN = GET_BOATS + ' WHERE length > ?'
+
+export const SEARCH_BOATS_BY_LENGTH_SMALLER_THAN = GET_BOATS + ' WHERE length < ?'
+
+export const SEARCH_BOATS_BY_MANF_YEAR_EQUALS_TO = GET_BOATS + ' WHERE year = ?'
+
+export const SEARCH_BOATS_BY_MANF_YEAR_GREATER_THAN = GET_BOATS + ' WHERE year > ?'
+
+export const SEARCH_BOATS_BY_MANF_YEAR_SMALLER_THAN = GET_BOATS + ' WHERE year < ?'
