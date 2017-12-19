@@ -3,6 +3,7 @@ import React from 'react'
 import {
   BOAT_END_POINT, BOAT_TABLE_HEADER, BOAT_TYPE_END_POINT, MEMBER_END_POINT, MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, SEARCH_BOAT_END_POINT
 } from '../api'
+import { MEMBER_NAME, MEMBER_AGE, MEMBER_GENDER, BOAT_YEAR, BOAT_LENGTH, BOAT_TYPE, BOAT_TYPE_TYPE } from '../app.jsx'
 
 export class Table extends React.Component {
   constructor (props) {
@@ -51,8 +52,8 @@ export class Table extends React.Component {
     })
   }
 
-  displayDropdown (current, arr, index, name) {
-    if (arr.length === 0) for (let i = 18; i <= 100; i++) arr.push(i)
+  displayDropdown (current, arr = [], index, name, start, end) {
+    if (arr.length === 0) for (let i = start; i <= end; i++) arr.push(i)
     return (
       <select id={index} name={name} value={current} onChange={(e) => this.props.handleEditing(e)}
         className='ui dropdown'>
@@ -68,17 +69,17 @@ export class Table extends React.Component {
           <tr key={index}>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? <input id={index} name='name' onChange={(e) => this.props.handleEditing(e)} value={value.name} />
+                ? <input id={index} name={MEMBER_NAME} onChange={(e) => this.props.handleEditing(e)} value={value.name} />
                     : value.name}
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? this.displayDropdown(value.age, [], index, 'age')
+                    ? this.displayDropdown(value.age, [], index, MEMBER_AGE, 18, 100)
                     : value.age}
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? this.displayDropdown(value.gender, this.props.values.genders, index, 'gender')
+                    ? this.displayDropdown(value.gender, this.props.values.genders, index, MEMBER_GENDER)
                     : value.gender}
             </td>
             <td>
@@ -104,17 +105,17 @@ export class Table extends React.Component {
           <tr key={index}>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                  ? <input id={index} name='year' onChange={(e) => this.props.handleEditing(e)} value={value.year} />
-                  : value.year}
+                ? this.displayDropdown(value.year, [], index, BOAT_YEAR, 1960, 2017)
+                : value.year}
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? <input id={index} name='length' onChange={(e) => this.props.handleEditing(e)} value={value.length} />
+                ? <input id={index} name={BOAT_LENGTH} onChange={(e) => this.props.handleEditing(e)} value={value.length} />
                     : value.length}
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? this.displayDropdown(value.type, this.props.values.boatTypes, index, 'boatType')
+                    ? this.displayDropdown(value.type, this.props.values.boatTypes, index, BOAT_TYPE)
                     : value.type}
             </td>
             <td>
@@ -140,8 +141,9 @@ export class Table extends React.Component {
           <tr key={index}>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                  ? <input id={index} name='boatType' onChange={(e) => this.props.handleEditing(e)} value={value.type} />
-                  : value.type}
+                ? <input id={index} name={BOAT_TYPE_TYPE} onChange={(e) => this.props.handleEditing(e)} value={value.type} />
+               : <a href='#' onClick={() => this.props.fetch(BOAT_TABLE_HEADER,
+                  SEARCH_BOAT_END_POINT, '?type=' + value.type)}>{value.type}</a>}
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index

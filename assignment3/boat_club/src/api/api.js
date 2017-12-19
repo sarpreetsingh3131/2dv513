@@ -10,24 +10,24 @@ export let UPDATE_MEMBER = '/members'
 
 export let DELETE_MEMBER = '/members/:memberId'
 
-export let SEARCH_MEMBERS = '/members/search'
+export const SEARCH_MEMBERS = '/members/search'
 
-export let GET_GENDERS = '/genders'
+export const GET_GENDERS = '/genders'
 
-export let GET_BOATS = '/boats'
+export const GET_BOATS = '/boats'
 
 // export let GET_BOAT = '/boats/:boatId'
 
-export let CREATE_BOAT = '/boats'
+export const CREATE_BOAT = '/boats'
 
-export let UPDATE_BOAT = '/boats'
+export const UPDATE_BOAT = '/boats'
 
-export let DELETE_BOAT = '/boats/:boatId'
+export const DELETE_BOAT = '/boats/:boatId'
 
-export let GET_BOAT_TYPES = '/boatTypes'
+export const GET_BOAT_TYPES = '/boatTypes'
 
-export let CREATE_BOAT_TYPE = '/boatTypes'
+export const CREATE_BOAT_TYPE = '/boatTypes'
 
-export let UPDATE_BOAT_TYPE = '/boatTypes'
+export const UPDATE_BOAT_TYPE = '/boatTypes'
 
-export let SEARCH_BOATS = '/boats/search'
+export const SEARCH_BOATS = '/boats/search'
