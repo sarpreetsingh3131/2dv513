@@ -1,5 +1,5 @@
-export const MEMBER_TABLE_HEADER = ['Name', 'Age', 'Gender', 'Boats', 'Action']
-export const BOAT_TABLE_HEADER = ['Manufacture Year', 'Length(m)', 'Type', 'Owner', 'Action']
+export const MEMBER_TABLE_HEADER = ['ID', 'Name', 'Age', 'Gender', 'Boats', 'Action']
+export const BOAT_TABLE_HEADER = ['Manufacture Year', 'Length (ft)', 'Type', 'Owner', 'Action']
 export const BOAT_TYPE_TABLE_HEADER = ['Type', 'Action']
 export const BASE_URL = 'http://localhost:3000/api/'
 export const MEMBER_END_POINT = 'members'
@@ -25,16 +25,16 @@ export class API {
     })
   }
 
-  update (endPoint, data) {
+  postData (endPoint, data, method) {
     return new Promise((resolve, reject) => {
       window.fetch(BASE_URL + endPoint, {
-        method: 'PUT',
+        method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
         .then(res => { return res.json() })
         .then(data => data.error ? reject(new Error(data.error)) : resolve({
-          message: 'Updated',
+          message: method === 'POST' ? 'Added' : 'Updated',
           color: 'green',
           data: data.member || data.boat || data.boatType
         }))
@@ -49,7 +49,7 @@ export class API {
       })
         .then(res => { return res.json() })
         .then(data => data.error ? reject(new Error(data.error)) : resolve({
-          messgae: 'Deleted',
+          message: 'Deleted',
           color: 'green'
         }))
         .catch(err => reject(err))

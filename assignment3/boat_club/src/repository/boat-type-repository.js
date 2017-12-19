@@ -16,7 +16,10 @@ export class BoatTypeRepository {
 
   updateBoatType (boatType) {
     return new Promise((resolve, reject) => {
-      this.connection.query(UPDATE_BOAT_TYPE, [boatType.type, boatType.id], (err, res) => {
+      this.connection.query(UPDATE_BOAT_TYPE, [
+        boatType.type,
+        boatType.id
+      ], (err, res) => {
         err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getBoatType(boatType.id))
       })
     })

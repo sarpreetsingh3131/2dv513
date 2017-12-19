@@ -17,10 +17,6 @@ export class MemberService {
     return this.repo.getMembers()
   }
 
-  getMember (memberId) {
-    return this.repo.getMember(memberId)
-  }
-
   updateMember (member) {
     return this.repo.updateMember(member)
   }

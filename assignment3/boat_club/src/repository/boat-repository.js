@@ -12,10 +12,18 @@ export class BoatRepository {
 
   getQueryAndValue (query) {
     return new Promise((resolve, reject) => {
-      if (query.memberId) resolve({ query: SEARCH_BOATS_BY_MEMBER, value: query.memberId })
+      if (query.memberId) {
+        resolve({
+          query: SEARCH_BOATS_BY_MEMBER,
+          value: query.memberId
+        })
+      }
       if (query.type) {
         this.boatTypeRepo.getBoatTypeId(query.type)
-          .then(typeId => resolve({ query: SEARCH_BOATS_BY_TYPE, value: typeId }))
+          .then(typeId => resolve({
+            query: SEARCH_BOATS_BY_TYPE,
+            value: typeId
+          }))
           .catch(err => reject(err))
       }
     })
@@ -25,7 +33,6 @@ export class BoatRepository {
     return new Promise((resolve, reject) => {
       this.getQueryAndValue(query)
         .then(res => {
-          console.log(res)
           this.connection.query(res.query, [res.value], (err, res) => {
             err ? reject(new MyError('not found', 404)) : resolve(res)
           })
@@ -71,10 +78,16 @@ export class BoatRepository {
     return new Promise((resolve, reject) => {
       this.boatTypeRepo.getBoatTypeId(boat.type)
         .then(boatTypeId => {
-          this.connection.query(UPDATE_BOAT, [boat.year, boat.length, boatTypeId, boat.id], (err, res) => {
+          this.connection.query(UPDATE_BOAT, [
+            boat.year,
+            boat.length,
+            boatTypeId,
+            boat.id
+          ], (err, res) => {
             err ? reject(new MyError(err.sqlMessage, 404)) : resolve(this.getBoat(boat.id))
           })
         })
+      .catch(err => reject(err))
     })
   }
 

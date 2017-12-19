@@ -2,8 +2,6 @@ export let BASE_URL = '/api'
 
 export let GET_MEMBERS = '/members'
 
-// export let GET_MEMBER = '/members/:memberId'
-
 export let CREATE_MEMBER = '/members'
 
 export let UPDATE_MEMBER = '/members'
@@ -15,8 +13,6 @@ export const SEARCH_MEMBERS = '/members/search'
 export const GET_GENDERS = '/genders'
 
 export const GET_BOATS = '/boats'
-
-// export let GET_BOAT = '/boats/:boatId'
 
 export const CREATE_BOAT = '/boats'
 

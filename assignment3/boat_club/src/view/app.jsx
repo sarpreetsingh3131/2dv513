@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 import { Table } from './components/table.jsx'
 import { Sidebar } from './components/sidebar.jsx'
-import { API, GENDER_END_POINT, BOAT_TYPE_END_POINT } from './api'
+import { API, GENDER_END_POINT, BOAT_TYPE_END_POINT, MEMBER_END_POINT, BOAT_END_POINT } from './api'
 
 export const MEMBER_NAME = 'MEMBER_NAME'
 export const MEMBER_AGE = 'MEMBER_AGE'
@@ -33,8 +33,8 @@ class App extends React.Component {
       <div>
         {this.state.message === '' ? null : <div className={'ui message ' + this.state.color}>{this.state.message}</div>}
         <Sidebar fetch={this.fetch.bind(this)} />
-        <Table values={this.state} handleEditing={this.handleEditing.bind(this)}
-          fetch={this.fetch.bind(this)} delete={this.delete.bind(this)} update={this.update.bind(this)} />
+        <Table values={this.state} handleEditing={this.handleEditing.bind(this)} fetch={this.fetch.bind(this)}
+          delete={this.delete.bind(this)} postData={this.postData.bind(this)} addToList={this.addToList.bind(this)} />
       </div>
     )
   }
@@ -46,14 +46,16 @@ class App extends React.Component {
   }
 
   handleResult (res) {
+    let arr = this.state.tBody
+    if (res.data) arr[0] = res.data[0]
     this.setState({
-      tBody: res.tBody || this.state.tBody,
+      tBody: res.tBody || arr,
       tHead: res.tHead || this.state.tHead,
       endPoint: res.endPoint || this.state.endPoint,
       message: res.message,
       color: res.color
     })
-    window.setTimeout(() => this.setState({ message: '' }), 1000)
+    window.setTimeout(() => this.setState({ message: '' }), res.color === 'red' ? 2000 : 1000)
   }
 
   handleEditing (event) {
@@ -83,19 +85,44 @@ class App extends React.Component {
     this.setState({ tBody: arr, boatTypes: event.target.name === BOAT_TYPE_TYPE ? arr : this.state.boatTypes })
   }
 
-  add () {
-    let arr = this.state.tBody
-    arr.push(0, {})
-    this.setState({ tBody: arr })
+  addToList () {
+    if (this.state.tBody[0].id) {
+      let arr = this.state.tBody
+      let element = {}
+      switch (this.state.endPoint) {
+        case MEMBER_END_POINT:
+          element = {
+            name: '',
+            age: 18,
+            gender: this.state.genders[0].type
+          }
+          break
+        case BOAT_END_POINT:
+          element = {
+            year: 1960,
+            length: 20,
+            type: this.state.boatTypes[0].type,
+            owner: ''
+          }
+          break
+        case BOAT_TYPE_END_POINT:
+          element = { type: '' }
+      }
+      arr.splice(0, 0, element)
+      this.setState({ tBody: arr })
+    } else this.handleResult({ message: 'You cannot add empty objects', color: 'red' })
   }
 
-  update (index) {
-    this.api.update(this.state.endPoint, this.state.tBody[index])
+  postData (index, method) {
+    this.api.postData(this.state.endPoint, this.state.tBody[index], method)
       .then(res => this.handleResult(res))
-      .catch(err => this.handleResult({
-        message: err.message,
-        color: 'red'
-      }))
+      .catch(err => {
+        this.handleResult({
+          message: err.message,
+          color: 'red'
+        })
+        window.setTimeout(() => this.fetch(this.state.tHead, this.state.endPoint), 1000)
+      })
   }
 
   delete (id, index) {

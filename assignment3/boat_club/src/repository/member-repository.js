@@ -8,15 +8,32 @@ export class MemberRepository {
     this.genderRepo = new GenderRepository(connection)
   }
 
+  validateName (name) {
+    name = name.toLowerCase().trim()
+    if (name.length < 2) throw new MyError('name must be at least 2 characters', 400)
+    let whiteSpaces = 0
+    for (let i = 0; i < name.length; i++) {
+      if (name.charAt(i) === ' ') whiteSpaces++
+      else if (name.charCodeAt(i) < 97 || name.charCodeAt(i) > 122 || whiteSpaces > 2) {
+        throw new MyError('inavlid name', 400)
+      }
+    }
+  }
+
   search (query) {
     return this.getMember(query.memberId)
   }
 
   createMember (member) {
     return new Promise((resolve, reject) => {
+      this.validateName(member.name)
       this.genderRepo.getGenderId(member.gender)
         .then(genderId => {
-          this.connection.query(CREATE_MEMBER, { name: member.name, age: member.age, gender: genderId },
+          this.connection.query(CREATE_MEMBER, {
+            name: member.name.trim(),
+            age: member.age,
+            gender: genderId
+          },
             (err, res) => {
               err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getMember(res.insertId))
             })
@@ -43,12 +60,19 @@ export class MemberRepository {
 
   updateMember (member) {
     return new Promise((resolve, reject) => {
+      this.validateName(member.name)
       this.genderRepo.getGenderId(member.gender)
         .then(genderId => {
-          this.connection.query(UPDATE_MEMBER, [member.name, member.age, genderId, member.id], (err, res) => {
+          this.connection.query(UPDATE_MEMBER, [
+            member.name.trim(),
+            member.age,
+            genderId,
+            member.id
+          ], (err, res) => {
             err ? reject(new MyError(err.sqlMessage, 404)) : resolve(this.getMember(member.id))
           })
         })
+      .catch(err => reject(err))
     })
   }
 

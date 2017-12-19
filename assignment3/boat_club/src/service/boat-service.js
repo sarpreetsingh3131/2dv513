@@ -17,11 +17,6 @@ export class BoatService {
     return this.repo.getBoats(memberId)
   }
 
-  /* getBoat (boatId) {
-    return this.repo.getBoat(boatId)
-  }
-  */
-
   updateBoat (boat) {
     return this.repo.updateBoat(boat)
   }

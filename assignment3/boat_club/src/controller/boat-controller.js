@@ -26,13 +26,6 @@ export class BoatController extends express.Router {
         .catch(err => res.status(err.status || 500).send({ error: err.message }))
     })
 
-    /* this.route(GET_BOAT).get((req, res) => {
-      this.service.getBoat(req.params.boatId)
-        .then(boat => res.status(200).send({ boat: boat }))
-        .catch(err => res.status(err.status || 500).send({ error: err.message }))
-    })
-*/
-
     this.route(UPDATE_BOAT).put((req, res) => {
       this.service.updateBoat(req.body)
         .then(boat => res.status(200).send({ boat: boat }))

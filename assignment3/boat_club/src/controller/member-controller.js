@@ -26,13 +26,6 @@ export class MemberController extends express.Router {
         .catch(err => res.status(err.status || 500).send({ error: err.message }))
     })
 
-    /* this.route(GET_MEMBER).get((req, res) => {
-      this.service.getMember(req.params.memberId)
-        .then(member => res.status(200).send({ member: member }))
-        .catch(err => res.status(err.status || 500).send({ error: err.message }))
-    })
-    */
-
     this.route(UPDATE_MEMBER).put((req, res) => {
       this.service.updateMember(req.body)
         .then(member => res.status(200).send({ member: member }))
