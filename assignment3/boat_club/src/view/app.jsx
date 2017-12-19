@@ -68,14 +68,15 @@ class App extends React.Component {
 
   handleResult (res) {
     let arr = this.state.tBody
-    if (res.data && !arr[0].id) arr[0] = res.data[0]
+    if (res.data && !arr[0].id) arr[0] = res.data[0] === undefined ? res.data : res.data[0]
     this.setState({
       tBody: res.tBody || arr,
       tHead: res.tHead || this.state.tHead,
       endPoint: res.endPoint || this.state.endPoint,
       message: res.message,
       color: res.color,
-      owners: this.state.endPoint === MEMBER_END_POINT ? res.tBody : this.state.owners
+      boatTypes: res.endPoint === BOAT_TYPE_END_POINT ? (res.tBody || arr) : this.state.boatTypes,
+      owners: res.endPoint === MEMBER_END_POINT ? (res.tBody || arr) : this.state.owners
     })
     window.setTimeout(() => this.setState({ message: '' }), res.color === 'red' ? 2000 : 1000)
   }
@@ -116,33 +117,36 @@ class App extends React.Component {
   }
 
   addToList () {
-    if (this.state.tBody[0].id) {
-      let arr = this.state.tBody
-      let element = {}
-      switch (this.state.endPoint) {
-        case MEMBER_END_POINT:
-          element = {
-            name: '',
-            age: MEMBER_START_AGE,
-            gender: this.state.genders[0].type
-          }
-          break
-        case BOAT_END_POINT:
-          element = {
-            year: BOAT_START_YEAR,
-            length: BOAT_START_LENGTH,
-            type: this.state.boatTypes[0].type,
-            memberId: this.state.owners[0].id
-          }
-          break
-        case BOAT_TYPE_END_POINT:
-          element = { type: '' }
+    let arr = this.state.tBody
+    try {
+      if (arr[0] === undefined || arr[0].id) {
+        let element = {}
+        switch (this.state.endPoint) {
+          case MEMBER_END_POINT:
+            element = {
+              name: '',
+              age: MEMBER_START_AGE,
+              gender: this.state.genders[0].type
+            }
+            break
+          case BOAT_END_POINT:
+            element = {
+              year: BOAT_START_YEAR,
+              length: BOAT_START_LENGTH,
+              type: this.state.boatTypes[0].type,
+              memberId: this.state.owners[0].id
+            }
+            break
+          case BOAT_TYPE_END_POINT:
+            element = { type: '' }
+        }
+        arr.splice(0, 0, element)
+        this.setState({ tBody: arr })
       }
-      arr.splice(0, 0, element)
-      this.setState({ tBody: arr })
-    } else {
+    } catch (err) {
+      let msg = err.toString()
       this.handleResult({
-        message: 'You cannot add empty objects',
+        message: msg.includes('id') ? 'No Member' : 'No Boat Type',
         color: 'red'
       })
     }
