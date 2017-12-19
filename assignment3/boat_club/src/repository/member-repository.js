@@ -1,4 +1,4 @@
-import { CREATE_MEMBER, GET_MEMBERS, GET_MEMBER, UPDATE_MEMBER, DELETE_MEMBER } from '../query/member-query'
+import { CREATE_MEMBER, GET_MEMBERS, UPDATE_MEMBER, DELETE_MEMBER, SEARCH_MEMBER_BY_ID } from '../query/member-query'
 import { MyError } from '../error/error'
 import { GenderRepository } from './gender-repository'
 
@@ -6,6 +6,10 @@ export class MemberRepository {
   constructor (connection) {
     this.connection = connection
     this.genderRepo = new GenderRepository(connection)
+  }
+
+  search (query) {
+    return this.getMember(query.memberId)
   }
 
   createMember (member) {
@@ -31,7 +35,7 @@ export class MemberRepository {
 
   getMember (memberId) {
     return new Promise((resolve, reject) => {
-      this.connection.query(GET_MEMBER, [memberId], (err, res) => {
+      this.connection.query(SEARCH_MEMBER_BY_ID, [memberId], (err, res) => {
         err || !res[0] ? reject(new MyError('not found', 404)) : resolve(res)
       })
     })

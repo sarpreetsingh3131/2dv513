@@ -16,7 +16,7 @@ export class GenderRepository {
 
   getGenderId (gender) {
     return new Promise((resolve, reject) => {
-      this.connection.query(GET_GENDER_ID, [gender.toLowerCase()], (err, res) => {
+      this.connection.query(GET_GENDER_ID, [gender], (err, res) => {
         err || !res[0] ? reject(new MyError('invalid gender', 400)) : resolve(res[0].id)
       })
     })

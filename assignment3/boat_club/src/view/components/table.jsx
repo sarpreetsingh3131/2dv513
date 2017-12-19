@@ -1,5 +1,9 @@
 import React from 'react'
 
+import {
+  BOAT_END_POINT, BOAT_TABLE_HEADER, BOAT_TYPE_END_POINT, MEMBER_END_POINT, MEMBER_TABLE_HEADER, SEARCH_MEMBER_END_POINT, SEARCH_BOAT_END_POINT
+} from '../api'
+
 export class Table extends React.Component {
   constructor (props) {
     super(props)
@@ -11,9 +15,12 @@ export class Table extends React.Component {
 
   render () {
     return (
-      <table className='ui celled table'>
+      <table className='ui compact celled table'>
         <thead>
-          <tr>{this.props.values.tHead.map((value, index) => <th key={index}>{value}</th>)}</tr>
+          <tr>
+            {this.props.values.tHead.map((value, index) => <th key={index}>{value}</th>)}
+            {this.props.values.tHead[0] ? <th><i className='circular add outline icon link' /></th> : null}
+          </tr>
         </thead>
         {this.displayTable()}
       </table>
@@ -30,32 +37,26 @@ export class Table extends React.Component {
 
   displayTable () {
     switch (this.props.values.endPoint) {
-      case this.props.api.MEMBER_END_POINT : return this.displayMemberTable()
-      case this.props.api.BOAT_END_POINT: return this.displayBoatTable()
-      case this.props.api.BOAT_TYPE_END_POINT: return this.displayBoatTypeTable()
+      case MEMBER_END_POINT : return this.displayMemberTable()
+      case BOAT_END_POINT: return this.displayBoatTable()
+      case BOAT_TYPE_END_POINT: return this.displayBoatTypeTable()
     }
-    if (this.props.values.endPoint.includes('boats?memberId=')) return this.displayBoatTable()
-    return this.displayMemberTable()
   }
 
   update (index) {
-    this.props.api.update(this.props.values.endPoint, this.props.values.tBody[index])
-      .then(res => this.props.handleResult(res))
-      .then(() => this.setState({ isEditing: false, editIndex: -1 }))
-      .catch(err => this.props.handleResult({ message: err.message, color: 'red' }))
-  }
-
-  delete (id, index) {
-    this.props.api.delete(this.props.values.endPoint, id)
-      .then(res => this.props.delete(index, res))
-      .catch(err => this.props.handleResult({ message: err.message, color: 'red' }))
+    this.props.update(index)
+    this.setState({
+      isEditing: false,
+      editIndex: -1
+    })
   }
 
   displayDropdown (current, arr, index, name) {
+    if (arr.length === 0) for (let i = 18; i <= 100; i++) arr.push(i)
     return (
       <select id={index} name={name} value={current} onChange={(e) => this.props.handleEditing(e)}
         className='ui dropdown'>
-        {arr.map((value, index) => <option key={index} id={value.type}>{value.type}</option>)}
+        {arr.map((value, index) => <option key={index} id={value.type || value}>{value.type || value}</option>)}
       </select>
     )
   }
@@ -72,7 +73,7 @@ export class Table extends React.Component {
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
-                    ? <input id={index} name='age' onChange={(e) => this.props.handleEditing(e)} value={value.age} />
+                    ? this.displayDropdown(value.age, [], index, 'age')
                     : value.age}
             </td>
             <td>
@@ -81,14 +82,14 @@ export class Table extends React.Component {
                     : value.gender}
             </td>
             <td>
-              <a href='#' onClick={() => this.props.fetch(this.props.api.BOAT_TABLE_HEADER,
-                this.props.api.BOAT_END_POINT + '?memberId=' + value.id)}>See Boats</a>
+              <a href='#' onClick={() => this.props.fetch(BOAT_TABLE_HEADER,
+                SEARCH_BOAT_END_POINT, '?memberId=' + value.id)}>See Boats</a>
             </td>
             <td>
-              {this.props.values.isEditing
+              {this.state.isEditing && this.state.editIndex === index
                   ? <i className='circular save outline icon link' onClick={() => this.update(index)} />
                   : <i className='circular edit outline icon link' onClick={() => this.edit(index)} />}
-              <i className={'circular trash outline icon link'} onClick={() => this.delete(value.id, index)} />
+              <i className={'circular trash outline icon link'} onClick={() => this.props.delete(value.id, index)} />
             </td>
           </tr>
         )}
@@ -117,14 +118,14 @@ export class Table extends React.Component {
                     : value.type}
             </td>
             <td>
-              <a href='#' onClick={() => this.props.fetch(this.props.api.MEMBER_TABLE_HEADER,
-                this.props.api.MEMBER_END_POINT + '/' + value.memberId)}>{value.owner}</a>
+              <a href='#' onClick={() => this.props.fetch(MEMBER_TABLE_HEADER,
+                SEARCH_MEMBER_END_POINT, '?memberId=' + value.memberId)}>{value.owner}</a>
             </td>
             <td>
               {this.state.isEditing && this.state.editIndex === index
                   ? <i className='circular save outline icon link' onClick={() => this.update(index)} />
                   : <i className='circular edit outline icon link' onClick={() => this.edit(index)} />}
-              <i className={'circular trash outline icon link'} onClick={() => this.delete(value.id, index)} />
+              <i className={'circular trash outline icon link'} onClick={() => this.props.delete(value.id, index)} />
             </td>
           </tr>
         )}

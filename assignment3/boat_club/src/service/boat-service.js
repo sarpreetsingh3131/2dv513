@@ -5,6 +5,10 @@ export class BoatService {
     this.repo = new BoatRepository(connection)
   }
 
+  search (query) {
+    return this.repo.search(query)
+  }
+
   createBoat (boat) {
     return this.repo.createBoat(boat)
   }
@@ -13,9 +17,10 @@ export class BoatService {
     return this.repo.getBoats(memberId)
   }
 
-  getBoat (boatId) {
+  /* getBoat (boatId) {
     return this.repo.getBoat(boatId)
   }
+  */
 
   updateBoat (boat) {
     return this.repo.updateBoat(boat)

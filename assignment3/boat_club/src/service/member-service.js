@@ -5,6 +5,10 @@ export class MemberService {
     this.repo = new MemberRepository(connection)
   }
 
+  search (query) {
+    return this.repo.search(query)
+  }
+
   createMember (member) {
     return this.repo.createMember(member)
   }

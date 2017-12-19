@@ -1,5 +1,9 @@
 import React from 'react'
 
+import {
+  BOAT_END_POINT, BOAT_TABLE_HEADER, BOAT_TYPE_END_POINT, BOAT_TYPE_TABLE_HEADER, MEMBER_END_POINT, MEMBER_TABLE_HEADER
+} from '../api'
+
 export class Sidebar extends React.Component {
   render () {
     return (
@@ -20,16 +24,16 @@ export class Sidebar extends React.Component {
 
   fetchMembers (event) {
     this.handleSidebarActivation(event)
-    this.props.fetch(this.props.api.MEMBER_TABLE_HEADER, this.props.api.MEMBER_END_POINT)
+    this.props.fetch(MEMBER_TABLE_HEADER, MEMBER_END_POINT)
   }
 
   fetchBoats (event) {
     this.handleSidebarActivation(event)
-    this.props.fetch(this.props.api.BOAT_TABLE_HEADER, this.props.api.BOAT_END_POINT)
+    this.props.fetch(BOAT_TABLE_HEADER, BOAT_END_POINT)
   }
 
   fetchBoatTypes (event) {
     this.handleSidebarActivation(event)
-    this.props.fetch(this.props.api.BOAT_TYPE_TABLE_HEADER, this.props.api.BOAT_TYPE_END_POINT)
+    this.props.fetch(BOAT_TYPE_TABLE_HEADER, BOAT_TYPE_END_POINT)
   }
 }

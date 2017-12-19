@@ -40,7 +40,7 @@ export class BoatTypeRepository {
 
   getBoatTypeId (boatType) {
     return new Promise((resolve, reject) => {
-      this.connection.query(GET_BOAT_TYPE_ID, [boatType.toLowerCase()], (err, res) => {
+      this.connection.query(GET_BOAT_TYPE_ID, [boatType], (err, res) => {
         err || !res[0] ? reject(new MyError('invalid boat type', 400)) : resolve(res[0].id)
       })
     })

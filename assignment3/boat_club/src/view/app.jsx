@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 import { Table } from './components/table.jsx'
 import { Sidebar } from './components/sidebar.jsx'
-import { API } from './api'
+import { API, GENDER_END_POINT, BOAT_END_POINT } from './api'
 
 class App extends React.Component {
   constructor () {
@@ -24,21 +24,20 @@ class App extends React.Component {
     return (
       <div>
         {this.state.message === '' ? null : <div className={'ui message ' + this.state.color}>{this.state.message}</div>}
-        <Sidebar fetch={this.fetch.bind(this)} api={this.api} />
-        <Table values={this.state} handleResult={this.handleResult.bind(this)} delete={this.delete.bind(this)}
-          handleEditing={this.handleEditing.bind(this)} api={this.api} fetch={this.fetch.bind(this)} />
+        <Sidebar fetch={this.fetch.bind(this)} />
+        <Table values={this.state} handleEditing={this.handleEditing.bind(this)}
+          fetch={this.fetch.bind(this)} delete={this.delete.bind(this)} update={this.update.bind(this.update.bind(this))} />
       </div>
     )
   }
 
   componentDidMount () {
-    Promise.all([this.api.fetch([], this.api.BOAT_TYPE_END_POINT), this.api.fetch([], this.api.GENDER_END_POINT)])
+    Promise.all([this.api.fetch([], BOAT_END_POINT), this.api.fetch([], GENDER_END_POINT)])
       .then(res => this.setState({ boatTypes: res[0].tBody, genders: res[1].tBody }))
       .catch(err => this.handleResult({ message: err.message, color: 'red' }))
   }
 
   handleResult (res) {
-    console.log(res)
     this.setState({
       tBody: res.tBody || this.state.tBody,
       tHead: res.tHead || this.state.tHead,
@@ -56,10 +55,10 @@ class App extends React.Component {
         arr[event.target.id].name = event.target.value
         break
       case 'age':
-        arr[event.target.id].age = event.target.value.trim()
+        arr[event.target.id].age = event.target.value
         break
       case 'length':
-        arr[event.target.id].length = event.target.value.trim()
+        arr[event.target.id].length = event.target.value
         break
       case 'gender':
         arr[event.target.id].gender = event.target.value
@@ -73,16 +72,43 @@ class App extends React.Component {
     this.setState({ tBody: arr })
   }
 
-  delete (index, res) {
+  add () {
     let arr = this.state.tBody
-    arr.splice(index, 1)
-    this.handleResult({ tBody: arr, message: res.message, color: res.color })
+    arr.push(0, {})
+    this.setState({ tBody: arr })
   }
 
-  fetch (headers, endPoint) {
-    this.api.fetch(headers, endPoint)
+  update (index) {
+    this.api.update(this.state.endPoint, this.state.tBody[index])
+      .then(res => this.handleResult(res))
+      .catch(err => this.handleResult({
+        message: err.message,
+        color: 'red'
+      }))
+  }
+
+  delete (id, index) {
+    let arr = this.state.tBody
+    arr.splice(index, 1)
+    this.api.delete(this.state.endPoint, id)
+      .then(res => this.handleResult({
+        tBody: arr,
+        message: res.message,
+        color: 'green'
+      }))
+      .catch(err => this.handleResult({
+        message: err.message,
+        color: 'red'
+      }))
+  }
+
+  fetch (headers, endPoint, query = '') {
+    this.api.fetch(headers, endPoint, query)
         .then(result => this.handleResult(result))
-        .catch(err => this.handleResult({ message: err.message, color: 'red' }))
+        .catch(err => this.handleResult({
+          message: err.message,
+          color: 'red'
+        }))
   }
 }
 

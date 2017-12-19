@@ -4,8 +4,8 @@ export let GET_BOATS = 'SELECT boat.id,boat.year,boat.length,member.id as member
 
 export let GET_BOAT = GET_BOATS + ' WHERE boat.id = ?'
 
-export let GET_BOATS_BY_MEMBER = GET_BOATS + ' WHERE member_id = ?'
-
 export let UPDATE_BOAT = 'UPDATE boat_club.boat SET year = ?, length = ?, type_id = ? WHERE id = ?'
 
 export let DELETE_BOAT = 'DELETE FROM boat_club.boat WHERE id = ?'
+
+export let SEARCH_BOATS_BY_MEMBER = GET_BOATS + ' WHERE member_id = ?'
