@@ -4,9 +4,9 @@ import { MyError } from '../error/error'
 
 export class DB {
   constructor () {
-    this.host = 'localhost'
-    this.user = 'root'
-    this.password = 'sunny'
+    this.host = 'www.songho.se'
+    this.user = 'boat_club'
+    this.password = '2DV513BoatClubServer!'
     this.database = 'boat_club'
     this.port = 3306
     this.connection = null
@@ -19,7 +19,10 @@ export class DB {
         user: this.user,
         password: this.password,
         database: this.database,
-        port: this.port
+        port: this.port,
+        ssl: {
+          rejectUnauthorized: false
+        }
       })
       this.connection.connect(err => {
         err ? reject(new MyError('cannot connect to DB')) : resolve(this.connection)
