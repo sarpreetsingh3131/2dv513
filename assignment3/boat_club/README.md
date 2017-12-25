@@ -3,6 +3,9 @@
 1. `npm install`
 2. `npm start`
 
+# Running Client (web-interface)
+1. `npm run client`
+
 # API "RESTful"
 
 **Create a member**
