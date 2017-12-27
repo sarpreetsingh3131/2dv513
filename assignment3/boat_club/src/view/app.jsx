@@ -74,11 +74,10 @@ class App extends React.Component {
       tHead: res.tHead || this.state.tHead,
       endPoint: res.endPoint || this.state.endPoint,
       message: res.message,
-      color: res.color,
-      boatTypes: res.endPoint === BOAT_TYPE_END_POINT ? (res.tBody || arr) : this.state.boatTypes,
-      owners: res.endPoint === MEMBER_END_POINT ? (res.tBody || arr) : this.state.owners
+      color: res.color
     })
     window.setTimeout(() => this.setState({ message: '' }), res.color === 'red' ? 2000 : 1000)
+    if (res.color !== 'red') this.componentDidMount()
   }
 
   handleEditing (event) {

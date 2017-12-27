@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import path from 'path'
+import cors from 'cors'
 
 import { DB } from './db/db'
 import { BASE_URL } from './api/api'
@@ -14,6 +15,7 @@ new DB().connect()
       let app = express()
       let port = 3000
 
+      app.use(cors())
       app.use(bodyParser.json())
       app.use(express.static(path.resolve(__dirname, 'public')))
 
@@ -24,7 +26,7 @@ new DB().connect()
         new GenderController(connection)
       )
 
-      app.use((request, response, next) => response.status(404).send({ error: 'url not found' }))
+      app.use((req, res, next) => res.status(404).send({ error: 'url not found' }))
 
       app.use((err, req, res, next) => res.status(500).send({ error: 'internal server error\n' + err.message }))
 

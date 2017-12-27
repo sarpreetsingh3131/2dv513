@@ -6,8 +6,21 @@ export class BoatTypeRepository {
     this.connection = connection
   }
 
+  validateType (type) {
+    type = type.toLowerCase().trim()
+    if (type.length < 2) throw new MyError('type must be at least 2 characters', 400)
+    let whiteSpaces = 0
+    for (let i = 0; i < type.length; i++) {
+      if (type.charAt(i) === ' ') whiteSpaces++
+      else if (type.charCodeAt(i) < 97 || type.charCodeAt(i) > 122 || whiteSpaces > 2) {
+        throw new MyError('inavlid type', 400)
+      }
+    }
+  }
+
   createBoatType (boatType) {
     return new Promise((resolve, reject) => {
+      this.validateType(boatType.type)
       this.connection.query(CREATE_BOAT_TYPE, { type: boatType.type }, (err, res) => {
         err ? reject(new MyError(err.sqlMessage, 400)) : resolve(this.getBoatType(res.insertId))
       })
@@ -24,6 +37,7 @@ export class BoatTypeRepository {
 
   updateBoatType (boatType) {
     return new Promise((resolve, reject) => {
+      this.validateType(boatType.type)
       this.connection.query(UPDATE_BOAT_TYPE, [
         boatType.type,
         boatType.id

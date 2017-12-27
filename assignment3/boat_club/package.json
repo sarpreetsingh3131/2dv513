@@ -25,6 +25,7 @@
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "cors": "^2.8.4",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.5",
     "nodemon": "^1.12.1",
