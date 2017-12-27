@@ -1,5 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import path from 'path'
 
 import { DB } from './db/db'
 import { BASE_URL } from './api/api'
@@ -14,25 +15,19 @@ new DB().connect()
       let port = 3000
 
       app.use(bodyParser.json())
+      app.use(express.static(path.resolve(__dirname, 'public')))
 
-      app.use((req, res, next) => {
-        res.type('json')
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000')
-        res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE')
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-        next()
-      })
-
-      app.use(BASE_URL, new MemberController(connection), new BoatController(connection),
-        new BoatTypeController(connection), new GenderController(connection))
+      app.use(BASE_URL,
+        new MemberController(connection),
+        new BoatController(connection),
+        new BoatTypeController(connection),
+        new GenderController(connection)
+      )
 
       app.use((request, response, next) => response.status(404).send({ error: 'url not found' }))
 
-      app.use((err, request, response, next) => {
-        console.log('ERROR', err.stack)
-        response.status(500).send({ error: 'internal server error' })
-      })
+      app.use((err, req, res, next) => res.status(500).send({ error: 'internal server error\n' + err.message }))
 
-      app.listen(port, () => console.log('server is running on http://localhost:' + port))
+      app.listen(port, () => console.log('app is running on http://localhost:' + port))
     })
     .catch(err => console.log(err.message))
