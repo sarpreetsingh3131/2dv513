@@ -1,10 +1,10 @@
  # How to run
 
-1. `npm install`
-2. `npm start`
-
-# Running Client (web-interface)
-1. `npm run client`
+1. clone the repo
+2. cd 2dv513/assignment3/boat_club/
+3. `npm install`
+4. `npm start`
+5. open localhost:3000
 
 # API "RESTful"
 
